@@ -1,0 +1,8 @@
+---
+- hosts: all
+  vars_files:
+    - ['vars/os-{{ ansible_os_family }}.yaml', vars/os-defaults.yaml]
+  roles:
+    - baseline
+    - workstation
+...

@@ -1,0 +1,14 @@
+---
+all:
+  hosts:
+    localhost:
+      ansible_connection: local
+  children:
+    headless:
+      hosts:
+        localhost: {}
+    # `workstation` ia a system with a head
+    workstation:
+      hosts:
+        localhost: {}
+...
