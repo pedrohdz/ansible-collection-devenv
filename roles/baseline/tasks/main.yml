@@ -1,0 +1,5 @@
+---
+- name: Foo
+  import_role:
+    name: pedrohdz.common.packages
+...
