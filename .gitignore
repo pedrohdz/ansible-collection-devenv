@@ -225,3 +225,10 @@ $RECYCLE.BIN/
 # End of https://www.toptal.com/developers/gitignore/api/macos,linux,windows,python,ansible
 
 # Generated using ignr.py - github.com/Antrikshy/ignr.py
+
+
+#------------------------------------------------------------------------------
+# Project local
+#------------------------------------------------------------------------------
+/.vim/
+/tmp/
