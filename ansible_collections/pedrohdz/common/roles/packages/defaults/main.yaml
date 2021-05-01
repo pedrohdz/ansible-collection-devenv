@@ -1,0 +1,67 @@
+---
+pedrohdz_packages_cache_valid_time_seconds: 3600
+pedrohdz_packages_update_cache: false
+pedrohdz_packages_upgrade_installed: false
+
+pedrohdz_packages: []
+
+# pedrohdz_packages:
+#   - i_string_as_pkg_name
+#   - name: i_simple_map_name_only
+#   - name: i_map_with_mult_pkgs
+#     packages:
+#       - i_map_with_mult_pkgs_1
+#       - i_map_with_mult_pkgs_2
+#       - i_map_with_mult_pkgs_3
+#   - name: i_simple_map_present
+#     state: present
+#
+#   - name: i_macports_IGNORE
+#     macports:
+#       ignore: true
+#
+#   - name: i_macports_noignore
+#     macports:
+#       ignore: false
+#
+#   - name: i_sub_mult_pkgs_NEVER
+#     packages:
+#       - i_sub_mult_pkgs_1_NEVER
+#       - i_sub_mult_pkgs_2_NEVER
+#       - i_sub_mult_pkgs_3_NEVER
+#     macports:
+#       packages:
+#         - i_sub_mult_pkgs_1
+#         - i_sub_mult_pkgs_2
+#         - i_sub_mult_pkgs_3
+#
+#   - name: i_ubuntu_ignore
+#     ubuntu:
+#       ignore: true
+#
+#   - name: i_string_NEVER
+#     packages:
+#       - i_string_1_NEVER
+#       - i_string_2_NEVER
+#       - i_string_3_NEVER
+#     macports: HERE
+#
+#   - name: u_simple_map
+#     state: absent
+#   - name: u_map_with_mult_pkgs
+#     state: absent
+#     packages:
+#       - u_map_with_mult_pkgs_1
+#       - u_map_with_mult_pkgs_2
+#       - u_map_with_mult_pkgs_3
+#
+#   - name: u_map_with_mult_pkgs_NEVER
+#     state: absent
+#     packages:
+#       - u_map_with_mult_pkgs_1_NEVER
+#       - u_map_with_mult_pkgs_2_NEVER
+#       - u_map_with_mult_pkgs_3_NEVER
+#     macports:
+#       ignore: true
+
+...

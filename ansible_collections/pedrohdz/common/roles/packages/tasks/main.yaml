@@ -1,0 +1,12 @@
+---
+- name: Define packackages to process.
+  ansible.builtin.set_fact:
+    _packages_present: '{{ pedrohdz_packages | pedrohdz.common.present_packages }}'
+    _packages_absent: '{{ pedrohdz_packages | pedrohdz.common.absent_packages }}'
+
+- import_tasks: process-macports.yaml
+  when: ansible_pkg_mgr == 'macports'
+
+- import_tasks: process-apt.yaml
+  when: ansible_pkg_mgr == 'apt'
+...

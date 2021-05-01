@@ -4,10 +4,13 @@ all:
     localhost:
       ansible_connection: local
   children:
-    headless:
+    # baseline can be used for CI/CD
+    baseline:
       hosts:
         localhost: {}
-    # `workstation` ia a system with a head
+    workstation_headless:
+      hosts:
+        localhost: {}
     workstation:
       hosts:
         localhost: {}

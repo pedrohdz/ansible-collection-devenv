@@ -1,0 +1,27 @@
+---
+# - name: Update packages cache
+#   community.general.macports:
+#     selfupdate: true
+#     upgrade: false
+#   become: '{{ pedrohdz_become_for_all }}'
+#   when: pedrohdz_packages_update_cache
+#
+# - name: Upgrade installed packages
+#   community.general.macports:
+#     selfupdate: false
+#     upgrade: true
+#   become: '{{ pedrohdz_become_for_all }}'
+#   when: pedrohdz_packages_upgrade_installed
+
+# - ansible.builtin.set_fact:
+#     _foo: |
+#       {{
+#         pedrohdz_packages | select("mapping") | selectattr("state", "defined") | selectattr("state", "eq", "present")
+#       }}
+
+- name: HERE
+  ansible.builtin.debug:
+    msg: |
+      install: {{ _packages_present | to_yaml }}
+      uninstall: {{ _packages_absent | to_yaml }}
+...

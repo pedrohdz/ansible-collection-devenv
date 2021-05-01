@@ -1,5 +1,0 @@
----
-- name: Bar
-  ansible.builtin.debug:
-    msg: HERE I AM -  {{ pedrohdz_test }} - {{ pedrohdz_become_for_all }}
-...
