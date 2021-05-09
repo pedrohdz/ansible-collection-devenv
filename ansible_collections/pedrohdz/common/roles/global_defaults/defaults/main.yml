@@ -1,4 +1,5 @@
 ---
-pedrohdz_test: foo bar haa..
 pedrohdz_become_for_all: false
+pedrohdz_package_cache_valid_time: 1800
+pedrohdz_package_update_cache: false
 ...

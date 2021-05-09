@@ -1,0 +1,9 @@
+---
+pedrohdz_apt_sources_hashicorp: true
+pedrohdz_apt_sources_helm: true
+pedrohdz_apt_sources_kubernetes: true
+pedrohdz_apt_sources_nodejs14: true
+pedrohdz_apt_sources_yarn: true
+
+pedrohdz_apt_sources_update_cache_on_change: true
+...

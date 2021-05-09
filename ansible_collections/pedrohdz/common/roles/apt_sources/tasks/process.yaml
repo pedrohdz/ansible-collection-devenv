@@ -1,0 +1,141 @@
+---
+# -----------------------------------------------------------------------------
+# Baseline setup
+# -----------------------------------------------------------------------------
+- name: Get Apt source state files.
+  find:
+    paths: /var/lib/apt/lists
+    patterns: '*.lz4'
+  register: _apt_sources_state_files
+
+- name: Ensure minimum Apt packages for configuring Apt sources.
+  ansible.builtin.apt:
+    install_recommends: false
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gnupg
+      - software-properties-common
+    cache_valid_time: '{{ pedrohdz_package_cache_valid_time }}'
+    state: present
+    update_cache: '{{ pedrohdz_package_update_cache or (_apt_sources_state_files.matched == 0) }}'
+  become: '{{ pedrohdz_become_for_all }}'
+
+
+# -----------------------------------------------------------------------------
+# Calculate facts
+# -----------------------------------------------------------------------------
+- name: Fetch distribution release's short name
+  ansible.builtin.command:
+    cmd: lsb_release --codename --short
+    strip_empty_ends: true
+  changed_when: false
+  register: _apt_sources_distribution_short_name_output
+
+- name: Set package distribution short name fact.
+  ansible.builtin.set_fact:
+    _packages_distribution_short_name: '{{ _apt_sources_distribution_short_name_output.stdout_lines | first }}'
+
+
+# -----------------------------------------------------------------------------
+# Process source repositories
+# -----------------------------------------------------------------------------
+# -- Helm --
+- name: Ensure Helms's GPG key for Apt
+  ansible.builtin.apt_key:
+    id: 294AC4827C1A168A
+    url: https://baltocdn.com/helm/signing.asc
+    state: present
+  become: '{{ pedrohdz_become_for_all }}'
+  notify: update_apt_cache
+  when: pedrohdz_apt_sources_helm
+
+- name: Ensure Helm's Apt repository
+  ansible.builtin.apt_repository:
+    repo: "deb https://baltocdn.com/helm/stable/debian/ all main"
+    state: present
+  become: '{{ pedrohdz_become_for_all }}'
+  notify: update_apt_cache
+  when: pedrohdz_apt_sources_helm
+
+
+  # -- Kubernetes --
+- name: Ensure Kubernetes's GPG key for Apt
+  ansible.builtin.apt_key:
+    id: FEEA9169307EA071
+    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+    state: present
+  become: '{{ pedrohdz_become_for_all }}'
+  notify: update_apt_cache
+  when: pedrohdz_apt_sources_kubernetes
+
+- name: Ensure Kubernetes's Apt repository
+  ansible.builtin.apt_repository:
+    repo: "deb https://apt.kubernetes.io/ kubernetes-xenial main"
+    state: present
+  become: '{{ pedrohdz_become_for_all }}'
+  notify: update_apt_cache
+  when: pedrohdz_apt_sources_kubernetes
+
+
+  # -- NodeJS 14 --
+- name: Ensure Node.js's GPG key for Apt
+  ansible.builtin.apt_key:
+    id: 1655A0AB68576280
+    url: https://deb.nodesource.com/gpgkey/nodesource.gpg.key
+    state: present
+  become: '{{ pedrohdz_become_for_all }}'
+  notify: update_apt_cache
+  when: pedrohdz_apt_sources_nodejs14
+
+- name: Ensure Node.js's 14.x Apt repository
+  ansible.builtin.apt_repository:
+    repo: "deb https://deb.nodesource.com/node_14.x {{ _packages_distribution_short_name }} main"
+    state: present
+  become: '{{ pedrohdz_become_for_all }}'
+  notify: update_apt_cache
+  when: pedrohdz_apt_sources_nodejs14
+
+
+  # -- Yarn --
+- name: Ensure Yarns's GPG key for Apt
+  ansible.builtin.apt_key:
+    id: 1646B01B86E50310
+    url: https://dl.yarnpkg.com/debian/pubkey.gpg
+    state: present
+  become: '{{ pedrohdz_become_for_all }}'
+  notify: update_apt_cache
+  when: pedrohdz_apt_sources_yarn
+
+- name: Ensure Yarns's Apt repository
+  ansible.builtin.apt_repository:
+    repo: "deb https://dl.yarnpkg.com/debian stable main"
+    state: present
+  become: '{{ pedrohdz_become_for_all }}'
+  notify: update_apt_cache
+  when: pedrohdz_apt_sources_yarn
+
+
+  # -- HashiCorp --
+- name: Ensure HashiCorp's GPG key for Apt
+  ansible.builtin.apt_key:
+    id: DA418C88A3219F7B
+    url: https://apt.releases.hashicorp.com/gpg
+    state: present
+  become: '{{ pedrohdz_become_for_all }}'
+  notify: update_apt_cache
+  when:
+    - pedrohdz_apt_sources_hashicorp
+    - ansible_architecture in ['x86_64', 'amd64']
+
+- name: Ensure Hashicorp Apt repository
+  ansible.builtin.apt_repository:
+    repo: "deb [arch=amd64] https://apt.releases.hashicorp.com {{ _packages_distribution_short_name }} main"
+    state: present
+  become: '{{ pedrohdz_become_for_all }}'
+  notify: update_apt_cache
+  when:
+    - pedrohdz_apt_sources_hashicorp
+    - ansible_architecture in ['x86_64', 'amd64']
+...

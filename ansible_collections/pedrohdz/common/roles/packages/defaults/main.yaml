@@ -1,7 +1,7 @@
 ---
-pedrohdz_packages_cache_valid_time_seconds: 3600
 pedrohdz_packages_update_cache: false
 pedrohdz_packages_upgrade_installed: false
+pedrohdz_packages_unminimize_ubuntu: true
 
 pedrohdz_packages: []
 

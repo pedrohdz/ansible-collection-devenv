@@ -1,0 +1,7 @@
+---
+- name: Update Apt cache when source changes.
+  ansible.builtin.apt:
+    update_cache: yes
+  listen: update_apt_cache
+  when: pedrohdz_apt_sources_update_cache_on_change
+...
