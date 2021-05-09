@@ -2,31 +2,14 @@
 - hosts: all
   roles:
     - pedrohdz.common.packages
-    #- baseline
-    #- workstation
   vars_files:
     - ['vars/os-{{ ansible_os_family }}.yaml', vars/os-defaults.yaml]
-
-# `baseline` should be considered minimum for CI/CD
-- hosts: baseline
-  roles:
-    - pedrohdz.common.packages
-  vars_files:
-    - ['vars/os-{{ ansible_os_family }}.yaml', vars/os-defaults.yaml]
-    - group_vars/baseline.yaml
-
-- hosts: workstation_headless
-  roles:
-    - pedrohdz.common.packages
-  vars_files:
-    - ['vars/os-{{ ansible_os_family }}.yaml', vars/os-defaults.yaml]
-    - group_vars/workstation_headless.yaml
+    - vars/all.yaml
 
 - hosts: workstation
   roles:
     - pedrohdz.common.packages
   vars_files:
     - ['vars/os-{{ ansible_os_family }}.yaml', vars/os-defaults.yaml]
-    - group_vars/workstation.yaml
-
+    - vars/workstation.yaml
 ...

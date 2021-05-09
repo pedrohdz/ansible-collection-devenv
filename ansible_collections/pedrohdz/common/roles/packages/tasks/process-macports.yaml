@@ -13,15 +13,23 @@
 #   become: '{{ pedrohdz_become_for_all }}'
 #   when: pedrohdz_packages_upgrade_installed
 
-# - ansible.builtin.set_fact:
-#     _foo: |
-#       {{
-#         pedrohdz_packages | select("mapping") | selectattr("state", "defined") | selectattr("state", "eq", "present")
-#       }}
 
-- name: HERE
-  ansible.builtin.debug:
-    msg: |
-      install: {{ _packages_present | to_yaml }}
-      uninstall: {{ _packages_absent | to_yaml }}
+- name: Ensure uninstalled Macports ports
+  community.general.macports:
+    name: '{{ _packages_absent }}'
+    selfupdate: false
+    state: absent
+    upgrade: false
+  become: '{{ pedrohdz_become_for_all }}'
+
+- name: Ensure installed Macports ports
+  community.general.macports:
+    name: '{{ _packages_present }}'
+    selfupdate: false
+    state: present
+    upgrade: false
+  become: '{{ pedrohdz_become_for_all }}'
+
+
+  #uninstall: {{ _packages_absent | to_yaml }}
 ...
