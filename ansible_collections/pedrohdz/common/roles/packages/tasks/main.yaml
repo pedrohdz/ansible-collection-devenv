@@ -23,9 +23,9 @@
         {{ _packages_macport_variants | map('join', '') | join(" ") | default("NONE", true) }}
       {%- endif -%}
 
-- import_tasks: process-macports.yaml
+- include_tasks: process-macports.yaml
   when: ansible_pkg_mgr == 'macports'
 
-- import_tasks: process-apt.yaml
+- include_tasks: process-apt.yaml
   when: ansible_pkg_mgr == 'apt'
 ...
