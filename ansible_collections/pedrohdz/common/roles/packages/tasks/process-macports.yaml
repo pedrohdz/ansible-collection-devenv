@@ -14,7 +14,7 @@
 #   when: pedrohdz_packages_upgrade_installed
 
 
-- name: Ensure uninstalled Macports ports
+- name: Ensure absent Macports ports.
   community.general.macports:
     name: '{{ _packages_absent }}'
     selfupdate: false
@@ -22,7 +22,7 @@
     upgrade: false
   become: '{{ pedrohdz_become_for_all }}'
 
-- name: Ensure installed Macports ports
+- name: Ensure present Macports ports.
   community.general.macports:
     name: '{{ _packages_present }}'
     selfupdate: false
@@ -30,6 +30,14 @@
     upgrade: false
   become: '{{ pedrohdz_become_for_all }}'
 
+- name: Ensure present Macport variant ports.
+  community.general.macports:
+    name: '{{ item[0] }}'
+    variant: '{{ item[1] }}'
+    selfupdate: false
+    state: present
+    upgrade: false
+  become: '{{ pedrohdz_become_for_all }}'
+  loop: '{{ _packages_macport_variants }}'
 
-  #uninstall: {{ _packages_absent | to_yaml }}
 ...

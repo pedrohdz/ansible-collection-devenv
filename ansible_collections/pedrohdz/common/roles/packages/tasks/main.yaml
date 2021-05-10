@@ -3,15 +3,21 @@
   ansible.builtin.set_fact:
     _packages_present: '{{ pedrohdz_packages | pedrohdz.common.present_packages }}'
     _packages_absent: '{{ pedrohdz_packages | pedrohdz.common.absent_packages }}'
+    _packages_macport_variants: '{{ pedrohdz_packages | pedrohdz.common.present_macport_variants }}'
 
-
-- name: List of packages to ensure are present.
+- name: List of packages to process.
   ansible.builtin.debug:
-    msg: 'Packages to ensure are present: {{ _packages_present | join(" ") | default("NONE", true) }}'
+    msg: |
+      Packages to ensure are absent:
+        {{ _packages_absent | join(" ") | default("NONE", true) }}
 
-- name: List of packages to ensure are absent.
-  ansible.builtin.debug:
-    msg: 'Packages to ensure are absent: {{ _packages_absent | join(" ") | default("NONE", true) }}'
+      Packages to ensure are present:
+        {{ _packages_present | join(" ") | default("NONE", true) }}
+
+      {% if ansible_pkg_mgr == 'macports' -%}
+      Macport variants to ensure are present:
+        {{ _packages_macport_variants | map('join', '') | join(" ") | default("NONE", true) }}
+      {%- endif -%}
 
 - import_tasks: process-macports.yaml
   when: ansible_pkg_mgr == 'macports'

@@ -65,8 +65,8 @@ pedrohdz_packages:
   #     packages:
   #       - terraform-0.11
   #       - terraform-0.12
-  #       - terraform-0.13
   #       - terraform-0.14
+  #       - terraform-0.15
   #       - terraform_select
 
   - name: Bulk System Specific Installs
@@ -100,6 +100,10 @@ pedrohdz_packages:
         - aspell-dict-en
         - aspell-dict-es
         - aspell-dict-sv
+
+  - name: dnsmasq
+    apt:
+      ignore: true
 
   - name: helm
     macports:
@@ -199,13 +203,11 @@ pedrohdz_packages:
       packages:
         - openjdk-11-doc
         - openjdk-11-jdk-headless
-          #- openjdk-11-jre-headless
 
   - name: openssh
     apt:
       packages:
         - openssh-client
-
 
   - name: python3
     apt:
@@ -272,6 +274,16 @@ pedrohdz_packages:
     apt:
       ignore: true
 
+  - name: vim
+    apt:
+      packages:
+        - vim
+        - vim-doc
+    macports:
+      variant_name: vim
+      variant: +python37+huge
+      # FIXME - variant: +python39+huge+cscope
+
   - asciidoc
   - autoconf
   - automake
@@ -284,7 +296,6 @@ pedrohdz_packages:
   - ctags
   - curl
   - cvs
-  - dnsmasq
   - findutils
   - flex
   - gawk
@@ -319,7 +330,6 @@ pedrohdz_packages:
   - wget
   - xmlstarlet
   - yarn
-
 
 
   # Move to workstation
