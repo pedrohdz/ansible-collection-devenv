@@ -1,0 +1,33 @@
+---
+# -----------------------------------------------------------------------------
+# Load defaults
+# -----------------------------------------------------------------------------
+# Pattern for loading variables borrowed from:
+# - https://github.com/geerlingguy/ansible-role-postgresql/blob/master/tasks/variables.yml
+- name: Include OS family specific variables (Debian).
+  include_vars: darwin.yaml
+  when: ansible_os_family == 'Darwin'
+
+- name: Include OS family specific variables (Debian).
+  include_vars: debian.yaml
+  when: ansible_os_family == 'Debian'
+
+
+# -----------------------------------------------------------------------------
+# Define global variables
+# -----------------------------------------------------------------------------
+- name: Define pedrohdz_box_default_group.
+  ansible.builtin.set_fact:
+    pedrohdz_box_default_group: '{{ __pedrohdz_box_default_group }}'
+  when: pedrohdz_box_default_group is not defined
+
+- name: Define pedrohdz_box_default_directory_mode.
+  ansible.builtin.set_fact:
+    pedrohdz_box_default_directory_mode: '{{ __pedrohdz_box_default_directory_mode }}'
+  when: pedrohdz_box_default_directory_mode is not defined
+
+- name: Define pedrohdz_box_default_owner.
+  ansible.builtin.set_fact:
+    pedrohdz_box_default_owner: '{{ __pedrohdz_box_default_owner }}'
+  when: pedrohdz_box_default_owner is not defined
+...
