@@ -13,7 +13,6 @@
 #   become: '{{ pedrohdz_become_for_all }}'
 #   when: pedrohdz_packages_upgrade_installed
 
-
 - name: Ensure absent Macports ports.
   community.general.macports:
     name: '{{ _packages_absent }}'
@@ -30,7 +29,7 @@
     upgrade: false
   become: '{{ pedrohdz_become_for_all }}'
 
-- name: Ensure present Macport variant ports.
+- name: Ensure present Macport variants.
   community.general.macports:
     name: '{{ item[0] }}'
     variant: '{{ item[1] }}'
@@ -40,4 +39,23 @@
   become: '{{ pedrohdz_become_for_all }}'
   loop: '{{ _packages_macport_variants }}'
 
+- name: Ensure Macport selections.
+  ansible.builtin.shell: |
+    set -o pipefail
+    set -o errexit
+    set -o nounset
+    current=$(port select --show {{ _packages_macport_group }} | sed -e "s/.*is '\(.*\)'\./\1/")
+    if [ "$current" != '{{ _packages_macport_version }}' ]; then
+      port select --set {{ _packages_macport_group }} {{ _packages_macport_version }} > /dev/null
+      echo 'CHANGED'
+    else
+      echo 'UNCHANGED'
+    fi
+  become: '{{ pedrohdz_become_for_all }}'
+  changed_when: _packages_macport_select_shell.stdout == "CHANGED"
+  loop: '{{ _packages_alternatives }}'
+  register: _packages_macport_select_shell
+  vars:
+    _packages_macport_group: '{{ item[0] }}'
+    _packages_macport_version: '{{ item[1] }}'
 ...

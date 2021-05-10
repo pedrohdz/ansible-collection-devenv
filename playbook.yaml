@@ -5,6 +5,7 @@
   vars_files:
     - ['vars/os-{{ ansible_os_family }}.yaml', vars/os-defaults.yaml]
     - vars/all.yaml
+    #- vars/simple-variants.yaml
 
 - hosts: workstation
   roles:

@@ -4,6 +4,7 @@
     _packages_present: '{{ pedrohdz_packages | pedrohdz.common.present_packages }}'
     _packages_absent: '{{ pedrohdz_packages | pedrohdz.common.absent_packages }}'
     _packages_macport_variants: '{{ pedrohdz_packages | pedrohdz.common.present_macport_variants }}'
+    _packages_alternatives: '{{ pedrohdz_packages | pedrohdz.common.alternatives }}'
 
 - name: List of packages to process.
   ansible.builtin.debug:
@@ -13,6 +14,9 @@
 
       Packages to ensure are present:
         {{ _packages_present | join(" ") | default("NONE", true) }}
+
+      Package alternative selections to ensure are present:
+        {{ _packages_alternatives }}
 
       {% if ansible_pkg_mgr == 'macports' -%}
       Macport variants to ensure are present:
