@@ -1,5 +1,5 @@
 ---
-- name: Ensure application's Python venv directory ({{ _pyvenv_path }})..
+- name: Ensure application's Python venv directory ({{ _pyvenv_path }}).
   ansible.builtin.file:
     group: '{{ pedrohdz_devenv_default_group }}'
     mode: '{{ pedrohdz_devenv_default_directory_mode }}'

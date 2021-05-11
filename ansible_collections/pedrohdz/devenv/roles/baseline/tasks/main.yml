@@ -16,4 +16,6 @@
     - opt
     - opt/python
     - share
+  loop_control:
+    label: '{{ pedrohdz_devenv_prefix }}/{{ item }}'
 ...

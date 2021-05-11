@@ -16,7 +16,7 @@
         {{ _packages_present | join(" ") | default("NONE", true) }}
 
       Package alternative selections to ensure are present:
-        {{ _packages_alternatives }}
+        {{ _packages_alternatives | map('first') | join(" ") | default("NONE", true) }}
 
       {% if ansible_pkg_mgr == 'macports' -%}
       Macport variants to ensure are present:
