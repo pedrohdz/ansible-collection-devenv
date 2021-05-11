@@ -2,7 +2,7 @@
 - hosts: all
   roles:
     - pedrohdz.devenv.baseline
-    #- pedrohdz.devenv.packages
+    - pedrohdz.devenv.packages
     - pedrohdz.devenv.pyvenv_apps
   vars_files:
     - ['vars/os-{{ ansible_os_family }}.yaml', vars/os-defaults.yaml]
