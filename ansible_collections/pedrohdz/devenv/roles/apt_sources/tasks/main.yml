@@ -1,5 +1,5 @@
 ---
-- import_tasks: process.yaml
+- include_tasks: process.yaml
   when: ansible_pkg_mgr == 'apt'
 
 - name: Flush handlers

@@ -48,4 +48,4 @@
 #     #       Maximum 20 tags per role.
 
 dependencies:
-  - pedrohdz.common.global_defaults
+  - pedrohdz.devenv.global_defaults

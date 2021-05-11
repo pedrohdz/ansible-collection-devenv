@@ -16,18 +16,18 @@
 # -----------------------------------------------------------------------------
 # Define global variables
 # -----------------------------------------------------------------------------
-- name: Define pedrohdz_box_default_group.
+- name: Define pedrohdz_devenv_default_group.
   ansible.builtin.set_fact:
-    pedrohdz_box_default_group: '{{ __pedrohdz_box_default_group }}'
-  when: pedrohdz_box_default_group is not defined
+    pedrohdz_devenv_default_group: '{{ __pedrohdz_devenv_default_group }}'
+  when: pedrohdz_devenv_default_group is not defined
 
-- name: Define pedrohdz_box_default_directory_mode.
+- name: Define pedrohdz_devenv_default_directory_mode.
   ansible.builtin.set_fact:
-    pedrohdz_box_default_directory_mode: '{{ __pedrohdz_box_default_directory_mode }}'
-  when: pedrohdz_box_default_directory_mode is not defined
+    pedrohdz_devenv_default_directory_mode: '{{ __pedrohdz_devenv_default_directory_mode }}'
+  when: pedrohdz_devenv_default_directory_mode is not defined
 
-- name: Define pedrohdz_box_default_owner.
+- name: Define pedrohdz_devenv_default_owner.
   ansible.builtin.set_fact:
-    pedrohdz_box_default_owner: '{{ __pedrohdz_box_default_owner }}'
-  when: pedrohdz_box_default_owner is not defined
+    pedrohdz_devenv_default_owner: '{{ __pedrohdz_devenv_default_owner }}'
+  when: pedrohdz_devenv_default_owner is not defined
 ...
