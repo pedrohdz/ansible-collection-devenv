@@ -46,7 +46,7 @@
 #     #
 #     # NOTE: A tag is limited to a single word comprised of alphanumeric characters.
 #     #       Maximum 20 tags per role.
-
+#
 dependencies:
   - pedrohdz.devenv.global_defaults
-  - pedrohdz.devenv.apt_sources
+  - pedrohdz.devenv.baseline

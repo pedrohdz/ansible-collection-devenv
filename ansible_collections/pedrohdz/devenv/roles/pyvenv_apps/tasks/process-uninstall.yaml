@@ -1,0 +1,16 @@
+---
+- name: Ensure absent application executable links in bin directory ({{ _pyvenv_path }}).
+  ansible.builtin.file:
+    path: '{{ pedrohdz_devenv_prefix }}/bin/{{ _pyvenv_bin_symlink_item }}'
+    state: absent
+  become: '{{ pedrohdz_devenv_become_for_all }}'
+  loop: '{{ _pyvenv_bin_files }}'
+  loop_control:
+    loop_var: _pyvenv_bin_symlink_item
+
+- name: Ensure absent application Python venv directory ({{ _pyvenv_path }}).
+  ansible.builtin.file:
+    path: '{{ _pyvenv_path }}'
+    state: absent
+  become: '{{ pedrohdz_devenv_become_for_all }}'
+...

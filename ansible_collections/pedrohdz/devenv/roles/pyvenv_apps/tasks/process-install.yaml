@@ -1,0 +1,31 @@
+---
+- name: Ensure application's Python venv directory ({{ _pyvenv_path }})..
+  ansible.builtin.file:
+    group: '{{ pedrohdz_devenv_default_group }}'
+    mode: '{{ pedrohdz_devenv_default_directory_mode }}'
+    owner: '{{ pedrohdz_devenv_default_owner }}'
+    path: '{{ _pyvenv_path }}'
+    state: directory
+  become: '{{ pedrohdz_devenv_become_for_all }}'
+
+- name: Ensure application installed in Python venv ({{ _pyvenv_path }}).
+  ansible.builtin.pip:
+    chdir: '{{ _pyvenv_path }}'
+    name: '{{ _pyvenv_packages }}'
+    state: '{{ _pyvenv_state }}'
+    virtualenv: '{{ _pyvenv_path }}'
+    virtualenv_command: '{{ _pyvenv_venv_command }}'
+  become: '{{ pedrohdz_devenv_become_for_all }}'
+
+- name: Ensure application executable links in bin directory ({{ _pyvenv_path }}).
+  ansible.builtin.file:
+    dest: '{{ pedrohdz_devenv_prefix }}/bin/{{ _pyvenv_bin_symlink_item }}'
+    group: '{{ pedrohdz_devenv_default_group }}'
+    owner: '{{ pedrohdz_devenv_default_owner }}'
+    src: '{{ _pyvenv_path }}/bin/{{ _pyvenv_bin_symlink_item }}'
+    state: link
+  become: '{{ pedrohdz_devenv_become_for_all }}'
+  loop: '{{ _pyvenv_bin_files }}'
+  loop_control:
+    loop_var: _pyvenv_bin_symlink_item
+...

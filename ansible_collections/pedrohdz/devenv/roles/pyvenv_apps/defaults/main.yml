@@ -1,0 +1,9 @@
+---
+pedrohdz_devenv_pyvenv_apps: []
+  # - flake8
+  # - pylint
+  # - name: future
+  #   bin_files: [futurize, pasteurize]
+  #   state: latest
+  # - name: tabulate
+...

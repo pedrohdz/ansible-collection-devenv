@@ -1,0 +1,25 @@
+---
+- name: Set pyenv application installation facts.
+  ansible.builtin.set_fact:
+    _pyvenv_apps_normalized: '{{ pedrohdz_devenv_pyvenv_apps | pedrohdz.devenv.normalize_pyvenv_apps }}'
+
+- include_tasks: process-install.yaml
+  vars:
+    _pyvenv_bin_files: '{{ _pyvenv_install_item["bin_files"] }}'
+    _pyvenv_packages: '{{ _pyvenv_install_item["packages"] }}'
+    _pyvenv_path: '{{ pedrohdz_devenv_prefix }}/opt/python/{{ _pyvenv_install_item["name"] }}'
+    _pyvenv_state: '{{ pedrohdz_devenv_force_upgrade_all | ternary("latest", _pyvenv_install_item["state"]) }}'
+    _pyvenv_venv_command: python3 -m venv
+  loop: '{{ _pyvenv_apps_normalized | selectattr("state", "ne", "absent") }}'
+  loop_control:
+    loop_var: _pyvenv_install_item
+
+- include_tasks: process-uninstall.yaml
+  vars:
+    _pyvenv_bin_files: '{{ _pyvenv_uninstall_item["bin_files"] }}'
+    _pyvenv_packages: '{{ _pyvenv_uninstall_item["packages"] }}'
+    _pyvenv_path: '{{ pedrohdz_devenv_prefix }}/opt/python/{{ _pyvenv_uninstall_item["name"] }}'
+  loop: '{{ _pyvenv_apps_normalized | selectattr("state", "eq", "absent") }}'
+  loop_control:
+    loop_var: _pyvenv_uninstall_item
+...
