@@ -17,10 +17,10 @@
       - curl
       - gnupg
       - software-properties-common
-    cache_valid_time: '{{ pedrohdz_package_cache_valid_time }}'
+    cache_valid_time: '{{ pedrohdz_devenv_packages_cache_valid_time }}'
     state: present
-    update_cache: '{{ pedrohdz_package_update_cache or (_apt_sources_state_files.matched == 0) }}'
-  become: '{{ pedrohdz_become_for_all }}'
+    update_cache: '{{ pedrohdz_devenv_packages_update_cache or (_apt_sources_state_files.matched == 0) }}'
+  become: '{{ pedrohdz_devenv_become_for_all }}'
 
 
 # -----------------------------------------------------------------------------
@@ -47,7 +47,7 @@
     id: 294AC4827C1A168A
     url: https://baltocdn.com/helm/signing.asc
     state: present
-  become: '{{ pedrohdz_become_for_all }}'
+  become: '{{ pedrohdz_devenv_become_for_all }}'
   notify: update_apt_cache
   when: pedrohdz_apt_sources_helm
 
@@ -55,7 +55,7 @@
   ansible.builtin.apt_repository:
     repo: "deb https://baltocdn.com/helm/stable/debian/ all main"
     state: present
-  become: '{{ pedrohdz_become_for_all }}'
+  become: '{{ pedrohdz_devenv_become_for_all }}'
   notify: update_apt_cache
   when: pedrohdz_apt_sources_helm
 
@@ -66,7 +66,7 @@
     id: FEEA9169307EA071
     url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
     state: present
-  become: '{{ pedrohdz_become_for_all }}'
+  become: '{{ pedrohdz_devenv_become_for_all }}'
   notify: update_apt_cache
   when: pedrohdz_apt_sources_kubernetes
 
@@ -74,7 +74,7 @@
   ansible.builtin.apt_repository:
     repo: "deb https://apt.kubernetes.io/ kubernetes-xenial main"
     state: present
-  become: '{{ pedrohdz_become_for_all }}'
+  become: '{{ pedrohdz_devenv_become_for_all }}'
   notify: update_apt_cache
   when: pedrohdz_apt_sources_kubernetes
 
@@ -85,7 +85,7 @@
     id: 1655A0AB68576280
     url: https://deb.nodesource.com/gpgkey/nodesource.gpg.key
     state: present
-  become: '{{ pedrohdz_become_for_all }}'
+  become: '{{ pedrohdz_devenv_become_for_all }}'
   notify: update_apt_cache
   when: pedrohdz_apt_sources_nodejs14
 
@@ -93,7 +93,7 @@
   ansible.builtin.apt_repository:
     repo: "deb https://deb.nodesource.com/node_14.x {{ _packages_distribution_short_name }} main"
     state: present
-  become: '{{ pedrohdz_become_for_all }}'
+  become: '{{ pedrohdz_devenv_become_for_all }}'
   notify: update_apt_cache
   when: pedrohdz_apt_sources_nodejs14
 
@@ -104,7 +104,7 @@
     id: 1646B01B86E50310
     url: https://dl.yarnpkg.com/debian/pubkey.gpg
     state: present
-  become: '{{ pedrohdz_become_for_all }}'
+  become: '{{ pedrohdz_devenv_become_for_all }}'
   notify: update_apt_cache
   when: pedrohdz_apt_sources_yarn
 
@@ -112,7 +112,7 @@
   ansible.builtin.apt_repository:
     repo: "deb https://dl.yarnpkg.com/debian stable main"
     state: present
-  become: '{{ pedrohdz_become_for_all }}'
+  become: '{{ pedrohdz_devenv_become_for_all }}'
   notify: update_apt_cache
   when: pedrohdz_apt_sources_yarn
 
@@ -123,7 +123,7 @@
     id: DA418C88A3219F7B
     url: https://apt.releases.hashicorp.com/gpg
     state: present
-  become: '{{ pedrohdz_become_for_all }}'
+  become: '{{ pedrohdz_devenv_become_for_all }}'
   notify: update_apt_cache
   when:
     - pedrohdz_apt_sources_hashicorp
@@ -133,7 +133,7 @@
   ansible.builtin.apt_repository:
     repo: "deb [arch=amd64] https://apt.releases.hashicorp.com {{ _packages_distribution_short_name }} main"
     state: present
-  become: '{{ pedrohdz_become_for_all }}'
+  become: '{{ pedrohdz_devenv_become_for_all }}'
   notify: update_apt_cache
   when:
     - pedrohdz_apt_sources_hashicorp

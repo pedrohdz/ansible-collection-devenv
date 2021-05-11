@@ -1,11 +1,10 @@
 ---
-pedrohdz_packages_update_cache: false
-pedrohdz_packages_upgrade_installed: false
-pedrohdz_packages_unminimize_ubuntu: true
+pedrohdz_devenv_packages_update_cache: false
+pedrohdz_devenv_packages_unminimize_ubuntu: false
 
-pedrohdz_packages: []
+pedrohdz_devenv_packages: []
 
-# pedrohdz_packages:
+# pedrohdz_devenv_packages:
 #   - i_string_as_pkg_name
 #   - name: i_simple_map_name_only
 #   - name: i_map_with_mult_pkgs

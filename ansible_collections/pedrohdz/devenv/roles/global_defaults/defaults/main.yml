@@ -1,6 +1,6 @@
 ---
-pedrohdz_become_for_all: false
+pedrohdz_devenv_become_for_all: false
 pedrohdz_devenv_prefix: /opt/devbox
-pedrohdz_package_cache_valid_time: 1800
-pedrohdz_package_update_cache: false
+pedrohdz_devenv_packages_cache_valid_time: 1800
+pedrohdz_devenv_packages_update_cache: false
 ...

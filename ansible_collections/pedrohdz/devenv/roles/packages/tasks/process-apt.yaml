@@ -7,7 +7,7 @@
     cmd: yes | /usr/local/sbin/unminimize
     removes: /etc/update-motd.d/60-unminimize
   when:
-    - pedrohdz_packages_unminimize_ubuntu
+    - pedrohdz_devenv_packages_unminimize_ubuntu
     - (ansible_distribution | lower) == 'ubuntu'
 
 
@@ -20,22 +20,22 @@
     name: '{{ _packages_absent }}'
     state: absent
     update_cache: false
-  become: '{{ pedrohdz_become_for_all }}'
+  become: '{{ pedrohdz_devenv_become_for_all }}'
 
 - name: Ensure installed Apt packages.
   ansible.builtin.apt:
-    cache_valid_time: '{{ pedrohdz_package_cache_valid_time }}'
+    cache_valid_time: '{{ pedrohdz_devenv_packages_cache_valid_time }}'
     install_recommends: false
     name: '{{ _packages_present }}'
     state: present
-    update_cache: '{{ pedrohdz_package_update_cache }}'
-  become: '{{ pedrohdz_become_for_all }}'
+    update_cache: '{{ pedrohdz_devenv_packages_update_cache }}'
+  become: '{{ pedrohdz_devenv_become_for_all }}'
 
 
 - name: Ensure Apt alternative selection.
   community.general.alternatives:
     name: '{{ item[0] }}'
     path: '{{ item[1] }}'
-  become: '{{ pedrohdz_become_for_all }}'
+  become: '{{ pedrohdz_devenv_become_for_all }}'
   loop: '{{ _packages_alternatives }}'
 ...

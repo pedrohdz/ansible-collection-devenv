@@ -6,7 +6,7 @@
     owner: '{{ pedrohdz_devenv_default_owner }}'
     path: '{{ pedrohdz_devenv_prefix }}/{{ item }}'
     state: directory
-  become: '{{ pedrohdz_become_for_all }}'
+  become: '{{ pedrohdz_devenv_become_for_all }}'
   loop:
     - ''
     - bin

@@ -3,15 +3,15 @@
 #   community.general.macports:
 #     selfupdate: true
 #     upgrade: false
-#   become: '{{ pedrohdz_become_for_all }}'
-#   when: pedrohdz_packages_update_cache
+#   become: '{{ pedrohdz_devenv_become_for_all }}'
+#   when: pedrohdz_devenv_packages_update_cache
 #
 # - name: Upgrade installed packages
 #   community.general.macports:
 #     selfupdate: false
 #     upgrade: true
-#   become: '{{ pedrohdz_become_for_all }}'
-#   when: pedrohdz_packages_upgrade_installed
+#   become: '{{ pedrohdz_devenv_become_for_all }}'
+#   when: pedrohdz_devenv_packages_upgrade_installed
 
 - name: Ensure absent Macports ports.
   community.general.macports:
@@ -19,7 +19,7 @@
     selfupdate: false
     state: absent
     upgrade: false
-  become: '{{ pedrohdz_become_for_all }}'
+  become: '{{ pedrohdz_devenv_become_for_all }}'
 
 - name: Ensure present Macports ports.
   community.general.macports:
@@ -27,7 +27,7 @@
     selfupdate: false
     state: present
     upgrade: false
-  become: '{{ pedrohdz_become_for_all }}'
+  become: '{{ pedrohdz_devenv_become_for_all }}'
 
 - name: Ensure present Macport variants.
   community.general.macports:
@@ -36,7 +36,7 @@
     selfupdate: false
     state: present
     upgrade: false
-  become: '{{ pedrohdz_become_for_all }}'
+  become: '{{ pedrohdz_devenv_become_for_all }}'
   loop: '{{ _packages_macport_variants }}'
 
 - name: Ensure Macport selections.
@@ -51,7 +51,7 @@
     else
       echo 'UNCHANGED'
     fi
-  become: '{{ pedrohdz_become_for_all }}'
+  become: '{{ pedrohdz_devenv_become_for_all }}'
   changed_when: _packages_macport_select_shell.stdout == "CHANGED"
   loop: '{{ _packages_alternatives }}'
   register: _packages_macport_select_shell

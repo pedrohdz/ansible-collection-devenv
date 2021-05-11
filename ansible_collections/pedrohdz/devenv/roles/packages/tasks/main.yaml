@@ -1,10 +1,10 @@
 ---
 - name: Define packackages to process.
   ansible.builtin.set_fact:
-    _packages_present: '{{ pedrohdz_packages | pedrohdz.devenv.present_packages }}'
-    _packages_absent: '{{ pedrohdz_packages | pedrohdz.devenv.absent_packages }}'
-    _packages_macport_variants: '{{ pedrohdz_packages | pedrohdz.devenv.present_macport_variants }}'
-    _packages_alternatives: '{{ pedrohdz_packages | pedrohdz.devenv.alternatives }}'
+    _packages_present: '{{ pedrohdz_devenv_packages | pedrohdz.devenv.present_packages }}'
+    _packages_absent: '{{ pedrohdz_devenv_packages | pedrohdz.devenv.absent_packages }}'
+    _packages_macport_variants: '{{ pedrohdz_devenv_packages | pedrohdz.devenv.present_macport_variants }}'
+    _packages_alternatives: '{{ pedrohdz_devenv_packages | pedrohdz.devenv.alternatives }}'
 
 - name: List of packages to process.
   ansible.builtin.debug:
