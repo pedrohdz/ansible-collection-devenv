@@ -38,4 +38,6 @@
     path: '{{ item[1] }}'
   become: '{{ pedrohdz_devenv_become_for_all }}'
   loop: '{{ _packages_alternatives }}'
+  loop_control:
+    label: '{{ item[0] }} ▶ {{ item[1] }}'
 ...

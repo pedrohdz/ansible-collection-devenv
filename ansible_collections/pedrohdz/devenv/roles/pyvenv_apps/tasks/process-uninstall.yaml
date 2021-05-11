@@ -7,6 +7,7 @@
   loop: '{{ _pyvenv_bin_files }}'
   loop_control:
     loop_var: _pyvenv_bin_symlink_item
+    label: '{{ pedrohdz_devenv_prefix }}/bin/{{ _pyvenv_bin_symlink_item }}'
 
 - name: Ensure absent application Python venv directory ({{ _pyvenv_path }}).
   ansible.builtin.file:

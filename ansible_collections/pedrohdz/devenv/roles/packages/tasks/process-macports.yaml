@@ -38,6 +38,8 @@
     upgrade: false
   become: '{{ pedrohdz_devenv_become_for_all }}'
   loop: '{{ _packages_macport_variants }}'
+  loop_control:
+    label: '{{ item[0] }} ▶ {{ item[1] }}'
 
 - name: Ensure Macport selections.
   ansible.builtin.shell: |
@@ -58,4 +60,6 @@
   vars:
     _packages_macport_group: '{{ item[0] }}'
     _packages_macport_version: '{{ item[1] }}'
+  loop_control:
+    label: '{{ item[0] }} ▶ {{ item[1] }}'
 ...
