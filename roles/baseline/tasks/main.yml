@@ -1,5 +1,21 @@
 ---
-- name: Foo
-  import_role:
-    name: pedrohdz.devenv.packages
+- name: Ensure devenv home directory exists with correct permissions ({{ pedrohdz_devenv_prefix }}).
+  ansible.builtin.file:
+    group: '{{ pedrohdz_devenv_default_group }}'
+    mode: '{{ pedrohdz_devenv_default_directory_mode }}'
+    owner: '{{ pedrohdz_devenv_default_owner }}'
+    path: '{{ pedrohdz_devenv_prefix }}/{{ item }}'
+    state: directory
+  become: '{{ pedrohdz_devenv_become_for_all }}'
+  loop:
+    - ''
+    - bin
+    - etc
+    - etc/bash_completion.d
+    - lib
+    - opt
+    - opt/python
+    - share
+  loop_control:
+    label: '{{ pedrohdz_devenv_prefix }}/{{ item }}'
 ...
