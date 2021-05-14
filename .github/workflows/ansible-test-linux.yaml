@@ -23,8 +23,8 @@ jobs:
         working-directory: ansible_collections/pedrohdz/devenv/
         run: ansible-test units --color --docker default
 
-  integration-test:
-    name: Integration tests
+  integration-test-linux:
+    name: Linux integration tests
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -40,5 +40,54 @@ jobs:
           ansible-test integration --color \
             --docker ${{ matrix.IMAGE }} \
             --python-interpreter /usr/bin/python3
+
+  integration-test-macports:
+    name: Macports integration tests
+    runs-on: ${{ matrix.MACOS_WORKER_VERSION }}
+    strategy:
+      matrix:
+        MACOS_WORKER_VERSION:
+          - macos-10.15
+          #- macos-11.0  # FIXME - Still in private preview (https://github.com/actions/virtual-environments).
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install MacPorts
+        run: .github/scripts/setup-macports.sh
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Add MacPorts to the build PATH
+        run: |
+          set -o errexit
+          set -o nounset
+          echo '/opt/local/sbin' >> $GITHUB_PATH
+          echo '/opt/local/bin' >> $GITHUB_PATH
+          echo '/opt/local/libexec/gnubin' >> $GITHUB_PATH
+
+      - name: System information
+        run: |
+          set -o errexit
+          echo PATH="$PATH"
+
+      - name: Install Ansible
+        run: |
+          set -o errexit
+          set -o nounset
+          /usr/bin/python3 -m venv .venv
+          ./.venv/bin/pip3 install -U pip
+          ./.venv/bin/pip3 install ansible
+
+      - name: Run Ansible integration tests
+        run: |
+          set -o errexit
+          set -o nounset
+          cd 'ansible_collections/pedrohdz/devenv'
+          ../../../.venv/bin/ansible-test integration \
+              --allow-destructive \
+              --allow-root \
+              --color \
+              --local \
+              --python-interpreter /usr/bin/python3
 
 ...
