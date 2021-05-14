@@ -1,0 +1,44 @@
+---
+name: Continuous Integration
+
+on:
+  push: {}
+  # # At 03:27 on Monday
+  # schedule:
+  #   - cron: '27 3 * * 1'
+
+env:
+  PYTHON_VERSION: '3.9'
+
+jobs:
+  common-checks:
+    name: Common checks (sanity, unit tests)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Sanity checks
+        working-directory: ansible_collections/pedrohdz/devenv/
+        run: ansible-test sanity --color --docker default
+      - name: Unit tests
+        working-directory: ansible_collections/pedrohdz/devenv/
+        run: ansible-test units --color --docker default
+
+  integration-test:
+    name: Integration tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        IMAGE:
+          - geerlingguy/docker-debian10-ansible:latest
+          #- geerlingguy/docker-ubuntu2004-ansible:latest  # Fails, missing pycairo
+          - ubuntu2004
+    steps:
+      - uses: actions/checkout@v2
+      - name: Integration tests
+        working-directory: ansible_collections/pedrohdz/devenv/
+        run: |
+          ansible-test integration --color \
+            --docker ${{ matrix.IMAGE }} \
+            --python-interpreter /usr/bin/python3
+
+...
