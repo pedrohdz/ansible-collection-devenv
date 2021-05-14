@@ -1,5 +1,7 @@
+from __future__ import (absolute_import, division, print_function)
+__metaclass__ = type
+
 from copy import deepcopy
-from itertools import filterfalse
 
 
 def normalize_pyvenv_apps(items):
@@ -12,7 +14,7 @@ def convert_string(item):
         return {'name': item}
     elif isinstance(item, dict):
         return item
-    raise TypeError('Unknown type for: {}'.format(item))
+    raise TypeError('Unknown type for: {0}'.format(item))
 
 
 def normalize(item):

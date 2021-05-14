@@ -1,0 +1,11 @@
+---
+- name: simple string to dict
+  ansible.builtin.assert:
+    that: '["foo"] | pedrohdz.devenv.normalize_pyvenv_apps == _expected'
+  vars:
+    _expected:
+      - name: foo
+        bin_files: [foo]
+        packages: [foo]
+        state: 'present'
+...
