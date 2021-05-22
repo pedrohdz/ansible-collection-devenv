@@ -10,7 +10,7 @@
     _pyvenv_packages: '{{ _pyvenv_install_item["packages"] }}'
     _pyvenv_path: '{{ _pyvenv_apps_home_dir }}/{{ _pyvenv_install_item["name"] }}'
     _pyvenv_state: '{{ pedrohdz_devenv_force_upgrade_all | ternary("latest", _pyvenv_install_item["state"]) }}'
-    _pyvenv_venv_command: python3 -m venv
+    _pyvenv_venv_command: '{{ pedrohdz_devenv_python_path }} -m venv'
 
   loop: '{{ _pyvenv_apps_normalized | selectattr("state", "ne", "absent") }}'
   loop_control:

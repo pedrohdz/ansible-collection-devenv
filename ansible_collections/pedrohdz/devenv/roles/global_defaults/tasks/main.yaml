@@ -30,4 +30,9 @@
   ansible.builtin.set_fact:
     pedrohdz_devenv_default_owner: '{{ __pedrohdz_devenv_default_owner }}'
   when: pedrohdz_devenv_default_owner is not defined
+
+- name: Define pedrohdz_devenv_python_path.
+  ansible.builtin.set_fact:
+    pedrohdz_devenv_python_path: '{{ __pedrohdz_devenv_python_path }}'
+  when: pedrohdz_devenv_python_path is not defined
 ...
