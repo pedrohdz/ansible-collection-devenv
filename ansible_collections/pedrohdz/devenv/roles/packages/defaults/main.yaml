@@ -2,6 +2,10 @@
 pedrohdz_devenv_packages_update_cache: false
 pedrohdz_devenv_packages_unminimize_ubuntu: false
 
+# pedrohdz_devenv_packages_{ansible_distribution}_pkg_mgr
+pedrohdz_devenv_packages_macosx_pkg_mgr: default  # Possible values: all, default, macports, brew
+#pedrohdz_devenv_packages_ubuntu_pkg_mgr: apt
+
 pedrohdz_devenv_packages: []
 
 # pedrohdz_devenv_packages:

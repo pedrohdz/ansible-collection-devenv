@@ -24,7 +24,14 @@
       {%- endif -%}
 
 - include_tasks: process-macports.yaml
-  when: ansible_pkg_mgr == 'macports'
+  when: |
+    ((ansible_pkg_mgr == 'macports') and (pedrohdz_devenv_packages_macosx_pkg_mgr == 'default'))
+      or ((ansible_distribution == 'MacOSX') and (pedrohdz_devenv_packages_macosx_pkg_mgr in ['all', 'macports']))
+
+- include_tasks: process-brew.yaml
+  when: |
+    ((ansible_pkg_mgr == 'brew') and (pedrohdz_devenv_packages_macosx_pkg_mgr == 'default'))
+      or ((ansible_distribution == 'MacOSX') and (pedrohdz_devenv_packages_macosx_pkg_mgr in ['all', 'brew']))
 
 - include_tasks: process-apt.yaml
   when: ansible_pkg_mgr == 'apt'
