@@ -70,7 +70,7 @@
     - pedrohdz_devenv_packages
 
 - include_tasks: process-apt.yaml
-  when: _packages_dist_pkg_mgr == 'brew'
+  when: _packages_dist_pkg_mgr == 'apt'
   tags:
     - pedrohdz_devenv_packages
 ...
