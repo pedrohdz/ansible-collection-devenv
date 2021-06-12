@@ -20,6 +20,8 @@
     state: absent
     upgrade: false
   become: '{{ pedrohdz_devenv_become_for_all }}'
+  tags:
+    - pedrohdz_devenv_packages
 
 - name: Ensure present Macports ports.
   community.general.macports:
@@ -28,6 +30,8 @@
     state: present
     upgrade: false
   become: '{{ pedrohdz_devenv_become_for_all }}'
+  tags:
+    - pedrohdz_devenv_packages
 
 - name: Ensure present Macport variants.
   community.general.macports:
@@ -40,6 +44,8 @@
   loop: '{{ _packages_macport_variants }}'
   loop_control:
     label: '{{ item[0] }} ▶ {{ item[1] }}'
+  tags:
+    - pedrohdz_devenv_packages
 
 - name: Ensure Macport selections.
   ansible.builtin.shell: |
@@ -62,4 +68,6 @@
     _packages_macport_version: '{{ item[1] }}'
   loop_control:
     label: '{{ item[0] }} ▶ {{ item[1] }}'
+  tags:
+    - pedrohdz_devenv_packages
 ...

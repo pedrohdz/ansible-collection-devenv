@@ -5,25 +5,25 @@ from itertools import filterfalse
 from jinja2 import contextfilter
 
 
-def process_items(context, state_test, items):
-    filtered_items = filterfalse(is_ignore(context), items)
+def process_items(package_mgr, state_test, items):
+    filtered_items = filterfalse(is_ignore(package_mgr), items)
     filtered_items = filter(state_test, filtered_items)
-    filtered_items = filterfalse(has_macport_variants(context), filtered_items)
-    return sum(map(item_processor(context), filtered_items), start=[])
+    filtered_items = filterfalse(has_macport_variants(package_mgr), filtered_items)
+    return sum(map(item_processor(package_mgr), filtered_items), start=[])
 
 
-def item_processor(context):
+def item_processor(package_mgr):
     def _item_processor(item):
-        return process_item(context, item)
+        return process_item(package_mgr, item)
     return _item_processor
 
 
-def process_item(context, item):
+def process_item(package_mgr, item):
     if isinstance(item, str):
         return [item]
 
     try:
-        sub_item = item[context['ansible_pkg_mgr']]
+        sub_item = item[package_mgr]
         if isinstance(sub_item, str):
             return [sub_item]
         return sub_item['packages']
@@ -36,10 +36,10 @@ def process_item(context, item):
         return [item['name']]
 
 
-def process_macport_variants(context, items):
-    filtered_items = filterfalse(is_ignore(context), items)
+def process_macport_variants(package_mgr, items):
+    filtered_items = filterfalse(is_ignore(package_mgr), items)
     filtered_items = filter(is_present, filtered_items)
-    filtered_items = filter(has_macport_variants(context), filtered_items)
+    filtered_items = filter(has_macport_variants(package_mgr), filtered_items)
     return map(process_macport_variant_item, filtered_items)
 
 
@@ -47,18 +47,18 @@ def process_macport_variant_item(item):
     return (item['macports']['variant_name'], item['macports']['variant'])
 
 
-def process_alternatives(context, items):
-    filtered_items = filterfalse(is_ignore(context), items)
+def process_alternatives(package_mgr, items):
+    filtered_items = filterfalse(is_ignore(package_mgr), items)
     filtered_items = filter(is_present, filtered_items)
-    filtered_items = filter(has_alternatives(context), filtered_items)
+    filtered_items = filter(has_alternatives(package_mgr), filtered_items)
     return sum(map(
-        process_alternatives_item(context), filtered_items), start=[])
+        process_alternatives_item(package_mgr), filtered_items), start=[])
 
 
-def process_alternatives_item(context):
+def process_alternatives_item(package_mgr):
     def _func(item):
-        pkg_mgr = context['ansible_pkg_mgr']
-        return [(_k, _v) for _k, _v in item[pkg_mgr]['alternatives'].items()]
+        return [(_k, _v) for _k, _v
+                in item[package_mgr]['alternatives'].items()]
     return _func
 
 
@@ -79,19 +79,18 @@ def is_present(item):
         return True
 
 
-def is_ignore(context):
+def is_ignore(package_mgr):
     def _ignore_filter(item):
-        pkg_mgr = context['ansible_pkg_mgr']
         try:
-            return item[pkg_mgr]['ignore']
+            return item[package_mgr]['ignore']
         except (TypeError, KeyError):
             return False
     return _ignore_filter
 
 
-def has_macport_variants(context):
+def has_macport_variants(package_mgr):
     def _filter(item):
-        if context['ansible_pkg_mgr'] != 'macports':
+        if package_mgr != 'macports':
             return False
         try:
             return ('variant' in item['macports']
@@ -101,11 +100,10 @@ def has_macport_variants(context):
     return _filter
 
 
-def has_alternatives(context):
+def has_alternatives(package_mgr):
     def _filter(item):
-        pkg_mgr = context['ansible_pkg_mgr']
         try:
-            return 'alternatives' in item[pkg_mgr]
+            return 'alternatives' in item[package_mgr]
         except (TypeError, KeyError):
             return False
     return _filter
@@ -114,24 +112,20 @@ def has_alternatives(context):
 # -----------------------------------------------------------------------------
 # Register filters
 # -----------------------------------------------------------------------------
-@contextfilter
-def absent_packages(context, items):
-    return process_items(context, is_absent, items)
+def absent_packages(items, package_mgr):
+    return process_items(package_mgr, is_absent, items)
 
 
-@contextfilter
-def present_packages(context, items):
-    return process_items(context, is_present, items)
+def present_packages(items, package_mgr):
+    return process_items(package_mgr, is_present, items)
 
 
-@contextfilter
-def present_macport_variants(context, items):
-    return process_macport_variants(context, items)
+def present_macport_variants(items, package_mgr):
+    return process_macport_variants(package_mgr, items)
 
 
-@contextfilter
-def alternatives(context, items):
-    return process_alternatives(context, items)
+def alternatives(items, package_mgr):
+    return process_alternatives(package_mgr, items)
 
 
 class FilterModule(object):

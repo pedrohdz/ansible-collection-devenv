@@ -1,38 +1,76 @@
 ---
-- name: Define packackages to process.
+# -----------------------------------------------------------------------------
+# Setup
+# -----------------------------------------------------------------------------
+- name: Set distribution to package manager map fact.
   ansible.builtin.set_fact:
-    _packages_present: '{{ pedrohdz_devenv_packages | pedrohdz.devenv.present_packages }}'
-    _packages_absent: '{{ pedrohdz_devenv_packages | pedrohdz.devenv.absent_packages }}'
-    _packages_macport_variants: '{{ pedrohdz_devenv_packages | pedrohdz.devenv.present_macport_variants }}'
-    _packages_alternatives: '{{ pedrohdz_devenv_packages | pedrohdz.devenv.alternatives }}'
+    _packages_dist_pkg_mgr_map:
+      # When adding a new mapping, remember to ad the default value to
+      # defaults/main.yaml.
+      # {DIST_NAME}: '{{ pedrohdz_devenv_packages_{DIST_NAME}_pkg_mgr }}'
+      MacOSX: '{{ pedrohdz_devenv_packages_macosx_pkg_mgr }}'
+  tags:
+    - pedrohdz_devenv_packages
 
+- name: Set package manager according to distribution.
+  ansible.builtin.set_fact:
+    _packages_dist_pkg_mgr: >-
+      {{
+        ((_packages_dist_pkg_mgr_map[ansible_distribution] | default("default")) == "default")
+            | ternary(ansible_pkg_mgr, _packages_dist_pkg_mgr_map[ansible_distribution])
+      }}
+  tags:
+    - pedrohdz_devenv_packages
+
+- debug:
+    msg: The selected package manager is '{{ _packages_dist_pkg_mgr }}'.
+  tags:
+    - pedrohdz_devenv_packages
+
+- name: Define packages to process.
+  ansible.builtin.set_fact:
+    _packages_present: '{{ pedrohdz_devenv_packages | pedrohdz.devenv.present_packages(_packages_dist_pkg_mgr) }}'
+    _packages_absent: '{{ pedrohdz_devenv_packages | pedrohdz.devenv.absent_packages(_packages_dist_pkg_mgr) }}'
+    _packages_macport_variants: '{{ pedrohdz_devenv_packages | pedrohdz.devenv.present_macport_variants(_packages_dist_pkg_mgr) }}'
+    _packages_alternatives: '{{ pedrohdz_devenv_packages | pedrohdz.devenv.alternatives(_packages_dist_pkg_mgr) }}'
+  tags:
+    - pedrohdz_devenv_packages
+
+
+# -----------------------------------------------------------------------------
+# Process
+# -----------------------------------------------------------------------------
 - name: List of packages to process.
   ansible.builtin.debug:
     msg: |
       Packages to ensure are absent:
-        {{ _packages_absent | join(" ") | default("NONE", true) }}
+        {{ _packages_absent | join(" ") | default("NONE", true) | wordwrap(77) | indent(2) }}
 
       Packages to ensure are present:
-        {{ _packages_present | join(" ") | default("NONE", true) }}
+        {{ _packages_present | join(" ") | default("NONE", true) | wordwrap(77) | indent(2) }}
 
       Package alternative selections to ensure are present:
-        {{ _packages_alternatives | map('first') | join(" ") | default("NONE", true) }}
+        {{ _packages_alternatives | map('first') | join(" ") | default("NONE", true) | wordwrap(77) | indent(2) }}
 
       {% if ansible_pkg_mgr == 'macports' -%}
       Macport variants to ensure are present:
-        {{ _packages_macport_variants | map('join', '') | join(" ") | default("NONE", true) }}
+        {{ _packages_macport_variants | map('join', '') | join(" ") | default("NONE", true) | wordwrap(77) | indent(2) }}
       {%- endif -%}
+  tags:
+    - pedrohdz_devenv_packages
 
 - include_tasks: process-macports.yaml
-  when: |
-    ((ansible_pkg_mgr == 'macports') and (pedrohdz_devenv_packages_macosx_pkg_mgr == 'default'))
-      or ((ansible_distribution == 'MacOSX') and (pedrohdz_devenv_packages_macosx_pkg_mgr in ['all', 'macports']))
+  when: _packages_dist_pkg_mgr == 'macports'
+  tags:
+    - pedrohdz_devenv_packages
 
 - include_tasks: process-brew.yaml
-  when: |
-    ((ansible_pkg_mgr == 'brew') and (pedrohdz_devenv_packages_macosx_pkg_mgr == 'default'))
-      or ((ansible_distribution == 'MacOSX') and (pedrohdz_devenv_packages_macosx_pkg_mgr in ['all', 'brew']))
+  when: _packages_dist_pkg_mgr == 'brew'
+  tags:
+    - pedrohdz_devenv_packages
 
 - include_tasks: process-apt.yaml
-  when: ansible_pkg_mgr == 'apt'
+  when: _packages_dist_pkg_mgr == 'brew'
+  tags:
+    - pedrohdz_devenv_packages
 ...
