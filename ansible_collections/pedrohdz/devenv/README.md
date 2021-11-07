@@ -1,3 +1,7 @@
+> **NOTICE** - This project has been migrated to
+> [Avinode/ansible-collection-devenv](https://github.com/Avinode/ansible-collection-devenv).
+
+
 # ansible-collection-devenv
 
 ```bash
