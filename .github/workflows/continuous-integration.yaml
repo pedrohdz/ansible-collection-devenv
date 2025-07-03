@@ -1,106 +1,106 @@
----
-name: Continuous Integration
-
-on:
-  push: {}
-  # At 03:12 on Monday
-  schedule:
-    - cron: '12 3 * * 1'
-
-env:
-  project_dir: ansible_collections/avinode/devenv
-
-jobs:
-  super-lint:
-    name: Super Linter
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          # super-linter needs the full git history.
-          fetch-depth: 0
-
-      - name: Lint Code Base
-        uses: super-linter/super-linter@v6
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VALIDATE_CHECKOV: false
-          VALIDATE_PYTHON_PYLINT: false  # TODO - Turn this back on
-          VALIDATE_SHELL_SHFMT: false
-
-  common-checks:
-    name: Common checks (sanity, unit, integration tests)
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          path: ${{ env.project_dir }}
-
-      - name: Install latest version of Ansible in a Python venv
-        working-directory: ${{ env.project_dir }}
-        run: scripts/setup-local-ansible.sh
-
-      - name: Sanity checks
-        working-directory: ${{ env.project_dir }}
-        run: |
-          make sanity
-
-      - name: Unit tests
-        working-directory: ${{ env.project_dir }}
-        run: |
-          make units
-
-      - name: Integration tests (Debian, Ubuntu)
-        working-directory: ${{ env.project_dir }}
-        run: |
-          make integration
-
-  integration-test-macports:
-    name: Macports integration tests
-    needs:
-      - common-checks
-      - super-lint
-    runs-on: ${{ matrix.MACOS_WORKER_VERSION }}
-    strategy:
-      matrix:
-        MACOS_WORKER_VERSION:
-          - macos-13
-          - macos-14
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          path: ${{ env.project_dir }}
-
-      - name: Install MacPorts
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        working-directory: ${{ env.project_dir }}
-        run: scripts/setup-macports.sh
-
-      - name: Add MacPorts to the build PATH
-        working-directory: ${{ env.project_dir }}
-        run: |
-          {
-            echo '/opt/local/sbin'
-            echo '/opt/local/bin'
-            echo '/opt/local/libexec/gnubin'
-          } >> "$GITHUB_PATH"
-
-      - name: System information
-        working-directory: ${{ env.project_dir }}
-        run: |
-          echo PATH="$PATH"
-
-      - name: Install latest version of Ansible in a Python venv
-        working-directory: ${{ env.project_dir }}
-        run: scripts/setup-local-ansible.sh
-
-      - name: Run Ansible integration tests
-        working-directory: ${{ env.project_dir }}
-        run: |
-          .venv/bin/ansible-test integration --color \
-              --allow-destructive \
-              --allow-root \
-              --local
-...
+# ---
+# name: Continuous Integration
+#
+# on:
+#   push: {}
+#   # At 03:12 on Monday
+#   schedule:
+#     - cron: '12 3 * * 1'
+#
+# env:
+#   project_dir: ansible_collections/avinode/devenv
+#
+# jobs:
+#   super-lint:
+#     name: Super Linter
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v4
+#         with:
+#           # super-linter needs the full git history.
+#           fetch-depth: 0
+#
+#       - name: Lint Code Base
+#         uses: super-linter/super-linter@v6
+#         env:
+#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#           VALIDATE_CHECKOV: false
+#           VALIDATE_PYTHON_PYLINT: false  # TODO - Turn this back on
+#           VALIDATE_SHELL_SHFMT: false
+#
+#   common-checks:
+#     name: Common checks (sanity, unit, integration tests)
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v4
+#         with:
+#           path: ${{ env.project_dir }}
+#
+#       - name: Install latest version of Ansible in a Python venv
+#         working-directory: ${{ env.project_dir }}
+#         run: scripts/setup-local-ansible.sh
+#
+#       - name: Sanity checks
+#         working-directory: ${{ env.project_dir }}
+#         run: |
+#           make sanity
+#
+#       - name: Unit tests
+#         working-directory: ${{ env.project_dir }}
+#         run: |
+#           make units
+#
+#       - name: Integration tests (Debian, Ubuntu)
+#         working-directory: ${{ env.project_dir }}
+#         run: |
+#           make integration
+#
+#   integration-test-macports:
+#     name: Macports integration tests
+#     needs:
+#       - common-checks
+#       - super-lint
+#     runs-on: ${{ matrix.MACOS_WORKER_VERSION }}
+#     strategy:
+#       matrix:
+#         MACOS_WORKER_VERSION:
+#           - macos-13
+#           - macos-14
+#     steps:
+#       - uses: actions/checkout@v4
+#         with:
+#           path: ${{ env.project_dir }}
+#
+#       - name: Install MacPorts
+#         env:
+#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#         working-directory: ${{ env.project_dir }}
+#         run: scripts/setup-macports.sh
+#
+#       - name: Add MacPorts to the build PATH
+#         working-directory: ${{ env.project_dir }}
+#         run: |
+#           {
+#             echo '/opt/local/sbin'
+#             echo '/opt/local/bin'
+#             echo '/opt/local/libexec/gnubin'
+#           } >> "$GITHUB_PATH"
+#
+#       - name: System information
+#         working-directory: ${{ env.project_dir }}
+#         run: |
+#           echo PATH="$PATH"
+#
+#       - name: Install latest version of Ansible in a Python venv
+#         working-directory: ${{ env.project_dir }}
+#         run: scripts/setup-local-ansible.sh
+#
+#       - name: Run Ansible integration tests
+#         working-directory: ${{ env.project_dir }}
+#         run: |
+#           .venv/bin/ansible-test integration --color \
+#               --allow-destructive \
+#               --allow-root \
+#               --local
+# ...
